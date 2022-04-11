@@ -1,7 +1,5 @@
 import Web3 from "web3";
-import { encode, decode } from "base64-arraybuffer";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { sign } from "tweetnacl";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Player from "./Player";
 // import NoDarkblockHeader from "../../Header/NoDarkblockHeader"
