@@ -14,6 +14,7 @@ const EthereumDarkblockWidget = ({
   contractAddress,
   tokenId,
   w3 = null,
+  cb = null,
   config = {
     customCssClass: "",
     debug: false,
@@ -31,21 +32,20 @@ const EthereumDarkblockWidget = ({
   const [mediaURL, setMediaURL] = useState("");
   const [epochSignature, setEpochSignature] = useState(null);
 
-  // useEffect(() => {
-  //   window.ethereum
-  //     ? ethereum
-  //         .request({ method: "eth_requestAccounts" })
-  //         .then((accounts) => {
-  //           setAddress(accounts[0]);
-  //           let w3 = new Web3(ethereum);
-  //           setWeb3(w3);
-  //         })
-  //         .catch((err) => console.log(err))
-  //     : console.log("Please install MetaMask");
-  // }, []);
+  const callback = (state) => {
+    if (config.debug) console.log("Callback function called from widget. State: ", state)
+
+    if (typeof cb !== "function") return
+
+    try {
+      cb(state)
+    } catch (e) {
+      console.log("Callback function error: ", e)
+    }
+  }
 
   useEffect(() => {
-    console.log(state.value);
+    callback(state.value)
 
     if (state.value === "idle") {
       send({ type: "FETCH_ARWEAVE" });
