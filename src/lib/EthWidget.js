@@ -33,19 +33,20 @@ const EthereumDarkblockWidget = ({
   const [epochSignature, setEpochSignature] = useState(null);
 
   const callback = (state) => {
-    if (config.debug) console.log("Callback function called from widget. State: ", state)
+    if (config.debug)
+      console.log("Callback function called from widget. State: ", state);
 
-    if (typeof cb !== "function") return
+    if (typeof cb !== "function") return;
 
     try {
-      cb(state)
+      cb(state);
     } catch (e) {
-      console.log("Callback function error: ", e)
+      console.log("Callback function error: ", e);
     }
-  }
+  };
 
   useEffect(() => {
-    callback(state.value)
+    callback(state.value);
 
     if (state.value === "idle") {
       send({ type: "FETCH_ARWEAVE" });
@@ -152,12 +153,19 @@ const EthereumDarkblockWidget = ({
   };
 
   return (
-    <div className="DarkblockWidget-App">
+    <div
+      className={
+        config.customCssClass
+          ? `DarkblockWidget-App ${config.customCssClass}`
+          : `DarkblockWidget-App`
+      }
+    >
       <>
         {state.value === "display" ? (
           <Player
             mediaType={state.context.display.fileFormat}
             mediaURL={mediaURL}
+            config={config.imgViewer}
           />
         ) : (
           <Header state={state} authenticate={() => send({ type: "SIGN" })} />
