@@ -1,4 +1,3 @@
-import Web3 from "web3";
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Player from "./Player";
@@ -9,56 +8,45 @@ import "./db.css";
 import { useMachine } from "@xstate/react";
 import { widgetMachine } from "./widgetMachine";
 
-const widgetName = "DarkblockWidget";
 const platform = "Ethereum";
-
-const signData = (address, data, cb) => {
-  return new Promise((resolve, reject) => {
-    const web3 = new Web3(Web3.givenProvider);
-    const typedData = [
-      {
-        type: "string",
-        name: "Message",
-        value: data,
-      },
-    ];
-    return web3.currentProvider.send(
-      {
-        method: "eth_signTypedData",
-        params: [typedData, address],
-      },
-      (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-
-        if (result.error) {
-          reject(result.error.message);
-        }
-
-        if (typeof cb === "function") {
-          cb();
-        }
-        resolve(result.result);
-      }
-    );
-  });
-};
 
 const EthereumDarkblockWidget = ({
   contractAddress,
   tokenId,
-  sessionToken = false,
+  w3 = null,
+  cb = null,
+  config = {
+    customCssClass: "",
+    debug: false,
+    imgViewer: {
+      showRotationControl: true,
+      autoHideControls: true,
+      controlsFadeDelay: true,
+    },
+  },
 }) => {
   const [state, send] = useMachine(() =>
     widgetMachine(tokenId, contractAddress, platform)
   );
+  const [address, setAddress] = useState(null);
   const [mediaURL, setMediaURL] = useState("");
-  const [address, setAddress] = useState("");
   const [epochSignature, setEpochSignature] = useState(null);
 
+  const callback = (state) => {
+    if (config.debug)
+      console.log("Callback function called from widget. State: ", state);
+
+    if (typeof cb !== "function") return;
+
+    try {
+      cb(state);
+    } catch (e) {
+      console.log("Callback function error: ", e);
+    }
+  };
+
   useEffect(() => {
-    console.log(state.value);
+    callback(state.value);
 
     if (state.value === "idle") {
       send({ type: "FETCH_ARWEAVE" });
@@ -66,26 +54,16 @@ const EthereumDarkblockWidget = ({
 
     if (state.value === "started") {
       const connectWallet = async () => {
-        console.log("web3: ", web3);
-        if (!web3) {
-          console.log("web3: ", web3);
-          try {
-            await window.ethereum.enable();
-            web3 = new Web3(window.ethereum);
-          } catch (error) {
-            window.alert("You need to allow MetaMask.");
-            return;
+        if (window.ethereum) {
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+
+          if (accounts) {
+            console.log("accounts: ", accounts);
+            setAddress(accounts[0]);
+            send({ type: "CONNECT_WALLET" });
           }
-        }
-
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-
-        if (accounts) {
-          console.log("accounts: ", accounts);
-          setAddress(accounts[0]);
-          send({ type: "CONNECT_WALLET" });
         }
       };
 
@@ -97,7 +75,7 @@ const EthereumDarkblockWidget = ({
     }
 
     if (state.value === "signing") {
-      authenticate();
+      authenticate(w3);
     }
 
     if (state.value === "authenticated") {
@@ -124,13 +102,13 @@ const EthereumDarkblockWidget = ({
     }
   }, [state.value]);
 
-  const authenticate = async () => {
+  const authenticate = async (w3) => {
     let signature;
     let epoch = Date.now();
     let sessionToken = epoch + address;
 
     try {
-      signature = await signData(address, sessionToken, () => {
+      signature = await signData(address, sessionToken, w3, () => {
         send({ type: "SUCCESS" });
       });
     } catch (e) {
@@ -142,13 +120,52 @@ const EthereumDarkblockWidget = ({
     setEpochSignature(epoch + "_" + signature);
   };
 
+  const signData = (address, data, w3, cb) => {
+    return new Promise((resolve, reject) => {
+      const typedData = [
+        {
+          type: "string",
+          name: "Message",
+          value: data,
+        },
+      ];
+      return w3.currentProvider.send(
+        {
+          method: "eth_signTypedData",
+          params: [typedData, address],
+        },
+        (err, result) => {
+          if (err) {
+            return reject(err);
+          }
+
+          if (result.error) {
+            reject(result.error.message);
+          }
+
+          if (typeof cb === "function") {
+            cb();
+          }
+          resolve(result.result);
+        }
+      );
+    });
+  };
+
   return (
-    <div className="DarkblockWidget-App">
+    <div
+      className={
+        config.customCssClass
+          ? `DarkblockWidget-App ${config.customCssClass}`
+          : `DarkblockWidget-App`
+      }
+    >
       <>
         {state.value === "display" ? (
           <Player
             mediaType={state.context.display.fileFormat}
             mediaURL={mediaURL}
+            config={config.imgViewer}
           />
         ) : (
           <Header state={state} authenticate={() => send({ type: "SIGN" })} />
