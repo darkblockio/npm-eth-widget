@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react"
-import Plyr from "plyr-react"
-import "./plyr.css"
-import "./photoswipe.css"
-import { VideoPlaceHolderBase64 } from "../imgBase64/VideoPlaceHolderBase64"
-import Loading from "../Animations/Loading"
-import OpenSeadragon from "openseadragon"
+import React, { useEffect, useRef } from "react";
+import Plyr from "plyr-react";
+import "./plyr.css";
+import "./photoswipe.css";
+import { VideoPlaceHolderBase64 } from "../imgBase64/VideoPlaceHolderBase64";
+import Loading from "../Animations/Loading";
+import OpenSeadragon from "openseadragon";
 
 const MyGallery = ({ mediaURL, config }) => {
   var duomo = {
@@ -13,9 +13,9 @@ const MyGallery = ({ mediaURL, config }) => {
       Overlap: "2",
       type: "image",
     },
-  }
+  };
 
-  const spinner = useRef(null)
+  const spinner = useRef(null);
 
   useEffect(() => {
     var viewer = OpenSeadragon({
@@ -28,11 +28,11 @@ const MyGallery = ({ mediaURL, config }) => {
         url: mediaURL,
         type: "image",
       },
-    })
+    });
     viewer.addOnceHandler("tile-drawn", () => {
-      spinner.current.style.display = "none"
-    })
-  }, [])
+      spinner.current.style.display = "none";
+    });
+  }, []);
 
   return (
     <>
@@ -61,21 +61,26 @@ const MyGallery = ({ mediaURL, config }) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 const MediaComp = ({ mediaURL, mediaType, config }) => {
-  console.log("mediaType: ", mediaType)
+  console.log("mediaType: ", mediaType);
 
-  if (mediaType == "encrypted(application/pdf)" || mediaType == "(application/pdf)")
+  if (
+    mediaType == "encrypted(application/pdf)" ||
+    mediaType == "(application/pdf)"
+  )
     return (
       <iframe
         allowFullScreen
         width="100%"
         style={{ border: "0px", minHeight: "500px", maxHeight: "600px" }}
-        src={`https://d1jjf9b695fxyn.cloudfront.net/pdf/web/viewer.html?file=${encodeURIComponent(mediaURL)}`}
+        src={`https://d1jjf9b695fxyn.cloudfront.net/pdf/web/viewer.html?file=${encodeURIComponent(
+          mediaURL
+        )}`}
       />
-    )
+    );
 
   if (mediaType == "encrypted(application/zip)") {
     return (
@@ -83,11 +88,14 @@ const MediaComp = ({ mediaURL, mediaType, config }) => {
         <h1>Zip</h1>
         <a href={mediaURL}>click here</a>
       </div>
-    )
+    );
   }
 
-  if (mediaType == "encrypted(image/svg+xml)" || mediaType.indexOf("image") > -1)
-    return <MyGallery mediaURL={mediaURL} config={config} />
+  if (
+    mediaType == "encrypted(image/svg+xml)" ||
+    mediaType.indexOf("image") > -1
+  )
+    return <MyGallery mediaURL={mediaURL} config={config} />;
 
   const mediaSrc = {
     type: "",
@@ -97,16 +105,16 @@ const MediaComp = ({ mediaURL, mediaType, config }) => {
         src: mediaURL,
       },
     ],
-  }
+  };
 
   if (mediaType.indexOf("audio") > -1) {
-    mediaSrc.type = "audio"
-    return <Plyr style={{ maxHeight: "600px" }} source={mediaSrc} />
+    mediaSrc.type = "audio";
+    return <Plyr style={{ maxHeight: "600px" }} source={mediaSrc} />;
   }
 
-  mediaSrc.type = "video"
-  return <Plyr style={{ maxHeight: "600px" }} source={mediaSrc} loop />
-}
+  mediaSrc.type = "video";
+  return <Plyr style={{ maxHeight: "600px" }} source={mediaSrc} loop />;
+};
 
 const Player = ({ mediaURL, mediaType, config }) => {
   return (
@@ -115,7 +123,7 @@ const Player = ({ mediaURL, mediaType, config }) => {
         <MediaComp mediaURL={mediaURL} mediaType={mediaType} config={config} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Player
+export default Player;

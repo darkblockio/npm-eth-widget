@@ -15304,7 +15304,7 @@ web3-eth-personal@1.7.3:
     web3-net "1.7.3"
     web3-utils "1.7.3"
 
-web3-eth@1.7.3:
+web3-eth@1.7.3, web3-eth@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/web3-eth/-/web3-eth-1.7.3.tgz#9e92785ea18d682548b6044551abe7f2918fc0b5"
   integrity sha512-BCIRMPwaMlTCbswXyGT6jj9chCh9RirbDFkPtvqozfQ73HGW7kP78TXXf9+Xdo1GjutQfxi/fQ9yPdxtDJEpDA==
