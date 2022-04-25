@@ -54,7 +54,7 @@ const cb = (param) => {
 ### Example
 
 ```
-import EthereumDarkblockWidget from "@darkblock.io/darkblockwidgets"
+import EthereumDarkblockWidget from "@darkblock.io/eth-widget"
 
 const Widget = () => {
   ...
