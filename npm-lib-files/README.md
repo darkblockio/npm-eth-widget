@@ -12,12 +12,10 @@ yarn add @darkblock.io/eth-widget
 npm i @darkblock.io/eth-widget --save
 ```
 
-Once the library is installed, import or require components into your codebase
+Once the library is installed, import or require components into your codebase, i.e:
 
 ```
-import "@darkblock.io/eth-widget"
-
-require("@darkblock.io/eth-widget")
+import EthereumDarkblockWidget "@darkblock.io/eth-widget"
 ```
 
 ## Ethereum Widget Component

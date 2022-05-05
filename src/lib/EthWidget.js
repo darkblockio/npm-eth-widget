@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
-import Player from "./Player";
-// import NoDarkblockHeader from "../../Header/NoDarkblockHeader"
-import Panel from "./Panel";
-import { getProxyAsset } from "./utils";
+import {
+  Header,
+  Panel,
+  Player,
+  utils,
+  widgetMachine,
+} from "@darkblock.io/shared-components";
 import "./db.css";
 import { useMachine } from "@xstate/react";
-import { widgetMachine } from "./widgetMachine";
 
 const platform = "Ethereum";
 
@@ -84,7 +85,7 @@ const EthereumDarkblockWidget = ({
 
     if (state.value === "decrypting") {
       setMediaURL(
-        getProxyAsset(
+        utils.getProxyAsset(
           state.context.artId,
           epochSignature,
           state.context.tokenId,
