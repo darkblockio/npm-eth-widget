@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from "react";
-import {
-  Header,
-  Panel,
-  Player,
-  utils,
-  widgetMachine,
-} from "@darkblock.io/shared-components";
-import "./db.css";
-import { useMachine } from "@xstate/react";
+import React, { useState, useEffect } from "react"
+import { Header, Panel, Player, utils, widgetMachine } from "@darkblock.io/shared-components"
+import "./db.css"
+import { useMachine } from "@xstate/react"
 
-const platform = "Ethereum";
+const platform = "Ethereum"
 
 const EthereumDarkblockWidget = ({
   contractAddress,
@@ -26,31 +20,28 @@ const EthereumDarkblockWidget = ({
     },
   },
 }) => {
-  const [state, send] = useMachine(() =>
-    widgetMachine(tokenId, contractAddress, platform)
-  );
-  const [address, setAddress] = useState(null);
-  const [mediaURL, setMediaURL] = useState("");
-  const [epochSignature, setEpochSignature] = useState(null);
+  const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform))
+  const [address, setAddress] = useState(null)
+  const [mediaURL, setMediaURL] = useState("")
+  const [epochSignature, setEpochSignature] = useState(null)
 
   const callback = (state) => {
-    if (config.debug)
-      console.log("Callback function called from widget. State: ", state);
+    if (config.debug) console.log("Callback function called from widget. State: ", state)
 
-    if (typeof cb !== "function") return;
+    if (typeof cb !== "function") return
 
     try {
-      cb(state);
+      cb(state)
     } catch (e) {
-      console.log("Callback function error: ", e);
+      console.log("Callback function error: ", e)
     }
-  };
+  }
 
   useEffect(() => {
-    callback(state.value);
+    callback(state.value)
 
     if (state.value === "idle") {
-      send({ type: "FETCH_ARWEAVE" });
+      send({ type: "FETCH_ARWEAVE" })
     }
 
     if (state.value === "started") {
@@ -58,17 +49,17 @@ const EthereumDarkblockWidget = ({
         if (window.ethereum) {
           const accounts = await window.ethereum.request({
             method: "eth_requestAccounts",
-          });
+          })
 
           if (accounts) {
-            console.log("accounts: ", accounts);
-            setAddress(accounts[0]);
-            send({ type: "CONNECT_WALLET" });
+            console.log("accounts: ", accounts)
+            setAddress(accounts[0])
+            send({ type: "CONNECT_WALLET" })
           }
         }
-      };
+      }
 
-      connectWallet();
+      connectWallet()
     }
 
     if (state.value === "wallet_connected") {
@@ -76,11 +67,11 @@ const EthereumDarkblockWidget = ({
     }
 
     if (state.value === "signing") {
-      authenticate(w3);
+      authenticate(w3)
     }
 
     if (state.value === "authenticated") {
-      send({ type: "DECRYPT" });
+      send({ type: "DECRYPT" })
     }
 
     if (state.value === "decrypting") {
@@ -93,33 +84,45 @@ const EthereumDarkblockWidget = ({
           null,
           platform
         )
-      );
+      )
       setTimeout(() => {
-        send({ type: "SUCCESS" });
-      }, 1000);
+        send({ type: "SUCCESS" })
+      }, 1000)
     }
 
     if (state.value === "display") {
     }
-  }, [state.value]);
+  }, [state.value])
 
   const authenticate = async (w3) => {
-    let signature;
-    let epoch = Date.now();
-    let sessionToken = epoch + address;
+    let signature
+    let epoch = Date.now()
+    let sessionToken = epoch + address
+    let ownerDataWithOwner
 
     try {
-      signature = await signData(address, sessionToken, w3, () => {
-        send({ type: "SUCCESS" });
-      });
+      ownerDataWithOwner = await utils.getOwner(contractAddress, tokenId, platform, address)
+      signature = await signData(address, sessionToken, w3)
     } catch (e) {
-      console.log(e);
+      console.log(e)
+    } finally {
+      if (signature) {
+        if (
+          !ownerDataWithOwner ||
+          !ownerDataWithOwner.owner_address ||
+          ownerDataWithOwner.owner_address.toLowerCase() !== address.toLowerCase()
+        ) {
+          send({ type: "FAIL" })
+        } else {
+          signature = encodeURIComponent(encode(signature)) + "_Solana"
+          setEpochSignature(epoch + "_" + signature)
+          send({ type: "SUCCESS" })
+        }
+      }
 
-      signature ? send({ type: "FAIL" }) : send({ type: "CANCEL" });
+      send({ type: "CANCEL" })
     }
-
-    setEpochSignature(epoch + "_" + signature);
-  };
+  }
 
   const signData = (address, data, w3, cb) => {
     return new Promise((resolve, reject) => {
@@ -129,7 +132,7 @@ const EthereumDarkblockWidget = ({
           name: "Message",
           value: data,
         },
-      ];
+      ]
       return w3.currentProvider.send(
         {
           method: "eth_signTypedData",
@@ -137,37 +140,27 @@ const EthereumDarkblockWidget = ({
         },
         (err, result) => {
           if (err) {
-            return reject(err);
+            return reject(err)
           }
 
           if (result.error) {
-            reject(result.error.message);
+            reject(result.error.message)
           }
 
           if (typeof cb === "function") {
-            cb();
+            cb()
           }
-          resolve(result.result);
+          resolve(result.result)
         }
-      );
-    });
-  };
+      )
+    })
+  }
 
   return (
-    <div
-      className={
-        config.customCssClass
-          ? `DarkblockWidget-App ${config.customCssClass}`
-          : `DarkblockWidget-App`
-      }
-    >
+    <div className={config.customCssClass ? `DarkblockWidget-App ${config.customCssClass}` : `DarkblockWidget-App`}>
       <>
         {state.value === "display" ? (
-          <Player
-            mediaType={state.context.display.fileFormat}
-            mediaURL={mediaURL}
-            config={config.imgViewer}
-          />
+          <Player mediaType={state.context.display.fileFormat} mediaURL={mediaURL} config={config.imgViewer} />
         ) : (
           <Header state={state} authenticate={() => send({ type: "SIGN" })} />
         )}
@@ -175,7 +168,7 @@ const EthereumDarkblockWidget = ({
         <p>{state.value}</p>
       </>
     </div>
-  );
-};
+  )
+}
 
-export default EthereumDarkblockWidget;
+export default EthereumDarkblockWidget
