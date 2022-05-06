@@ -114,7 +114,6 @@ const EthereumDarkblockWidget = ({
         ) {
           send({ type: "FAIL" })
         } else {
-          signature = encodeURIComponent(encode(signature)) + "_Solana"
           setEpochSignature(epoch + "_" + signature)
           send({ type: "SUCCESS" })
         }
