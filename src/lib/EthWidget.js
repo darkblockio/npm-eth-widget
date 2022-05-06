@@ -102,25 +102,24 @@ const EthereumDarkblockWidget = ({
 
     try {
       ownerDataWithOwner = await utils.getOwner(contractAddress, tokenId, platform, address)
-      signature = await signData(address, sessionToken, w3)
+
+      if (
+        !ownerDataWithOwner ||
+        !ownerDataWithOwner.owner_address ||
+        ownerDataWithOwner.owner_address.toLowerCase() !== address.toLowerCase()
+      ) {
+        send({ type: "FAIL" })
+      } else {
+        signature = await signData(address, sessionToken, w3, () => {
+          send({ type: "SUCCESS" })
+        })
+      }
     } catch (e) {
       console.log(e)
-    } finally {
-      if (signature) {
-        if (
-          !ownerDataWithOwner ||
-          !ownerDataWithOwner.owner_address ||
-          ownerDataWithOwner.owner_address.toLowerCase() !== address.toLowerCase()
-        ) {
-          send({ type: "FAIL" })
-        } else {
-          setEpochSignature(epoch + "_" + signature)
-          send({ type: "SUCCESS" })
-        }
-      }
-
-      send({ type: "CANCEL" })
+      signature ? send({ type: "FAIL" }) : send({ type: "CANCEL" })
     }
+
+    setEpochSignature(epoch + "_" + signature)
   }
 
   const signData = (address, data, w3, cb) => {
@@ -164,7 +163,7 @@ const EthereumDarkblockWidget = ({
           <Header state={state} authenticate={() => send({ type: "SIGN" })} />
         )}
         <Panel state={state} />
-        <p>{state.value}</p>
+        {config.debug && <p>{state.value}</p>}
       </>
     </div>
   )
