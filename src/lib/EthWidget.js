@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Header, Panel, Player, utils, widgetMachine } from "@darkblock.io/shared-components"
+import { Stack, utils, widgetMachine } from "@darkblock.io/shared-components"
 import "./db.css"
 import { useMachine } from "@xstate/react"
 
@@ -23,6 +23,7 @@ const EthereumDarkblockWidget = ({
   const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
   const [mediaURL, setMediaURL] = useState("")
+  const [stackMediaURLs, setStackMediaURLs] = useState("")
   const [epochSignature, setEpochSignature] = useState(null)
 
   const callback = (state) => {
@@ -85,6 +86,24 @@ const EthereumDarkblockWidget = ({
           platform
         )
       )
+
+      let arrTemp = []
+
+      state.context.display.stack.map((db) => {
+        arrTemp.push(
+          utils.getProxyAsset(
+            db.artId,
+            epochSignature,
+            state.context.tokenId,
+            state.context.contractAddress,
+            null,
+            platform
+          )
+        )
+      })
+
+      setStackMediaURLs(arrTemp)
+
       setTimeout(() => {
         send({ type: "SUCCESS" })
       }, 1000)
@@ -155,17 +174,7 @@ const EthereumDarkblockWidget = ({
   }
 
   return (
-    <div className={config.customCssClass ? `DarkblockWidget-App ${config.customCssClass}` : `DarkblockWidget-App`}>
-      <>
-        {state.value === "display" ? (
-          <Player mediaType={state.context.display.fileFormat} mediaURL={mediaURL} config={config.imgViewer} />
-        ) : (
-          <Header state={state} authenticate={() => send({ type: "SIGN" })} />
-        )}
-        <Panel state={state} />
-        {config.debug && <p>{state.value}</p>}
-      </>
-    </div>
+    <Stack state={state} authenticate={() => send({ type: "SIGN" })} urls={stackMediaURLs} config={config} />
   )
 }
 

@@ -33,6 +33,15 @@ stories.add("Video - Bubble Light", () => {
         tokenId="30553606573219150352991292921105176340809048341686170040023897674790759038977"
         w3={web3}
         cb={cb}
+        config={{
+          customCssClass: "custom-class",
+          debug: true,
+          imgViewer: {
+            showRotationControl: true,
+            autoHideControls: true,
+            controlsFadeDelay: true,
+          },
+        }}
       />
     )
   }
