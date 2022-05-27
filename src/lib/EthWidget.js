@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { Stack, utils, widgetMachine } from "@darkblock.io/shared-components"
-import "./db.css"
 import { useMachine } from "@xstate/react"
 
 const platform = "Ethereum"
@@ -173,9 +172,7 @@ const EthereumDarkblockWidget = ({
     })
   }
 
-  return (
-    <Stack state={state} authenticate={() => send({ type: "SIGN" })} urls={stackMediaURLs} config={config} />
-  )
+  return <Stack state={state} authenticate={() => send({ type: "SIGN" })} urls={stackMediaURLs} config={config} />
 }
 
 export default EthereumDarkblockWidget

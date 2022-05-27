@@ -27,21 +27,23 @@ stories.add("Video - Bubble Light", () => {
         : console.log("Please install MetaMask")
     }, [])
     return (
-      <EthereumDarkblockWidget
-        contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e"
-        tokenId="30553606573219150352991292921105176340809048341686170040023897679188805550081"
-        w3={web3}
-        cb={cb}
-        config={{
-          customCssClass: "custom-class",
-          debug: true,
-          imgViewer: {
-            showRotationControl: true,
-            autoHideControls: true,
-            controlsFadeDelay: true,
-          },
-        }}
-      />
+      <div style={{ maxWidth: "700px" }}>
+        <EthereumDarkblockWidget
+          contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e"
+          tokenId="30553606573219150352991292921105176340809048341686170040023897679188805550081"
+          w3={web3}
+          cb={cb}
+          config={{
+            customCssClass: "custom-class",
+            debug: true,
+            imgViewer: {
+              showRotationControl: true,
+              autoHideControls: true,
+              controlsFadeDelay: true,
+            },
+          }}
+        />
+      </div>
     )
   }
 
