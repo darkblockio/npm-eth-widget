@@ -1,6 +1,6 @@
 {
   "name": "@darkblock.io/eth-widget",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "Darkblock.io React Component Library",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
