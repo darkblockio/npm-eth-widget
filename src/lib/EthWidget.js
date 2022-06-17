@@ -82,7 +82,8 @@ const EthereumDarkblockWidget = ({
           state.context.tokenId,
           state.context.contractAddress,
           null,
-          platform
+          platform,
+          address
         )
       )
 
@@ -96,7 +97,8 @@ const EthereumDarkblockWidget = ({
             state.context.tokenId,
             state.context.contractAddress,
             null,
-            platform
+            platform,
+            address
           )
         )
       })
