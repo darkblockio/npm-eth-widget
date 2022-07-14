@@ -3,7 +3,6 @@ import { Stack, utils, widgetMachine } from "@darkblock.io/shared-components"
 import { useMachine } from "@xstate/react"
 
 const platform = "Ethereum"
-
 const EthereumDarkblockWidget = ({
   contractAddress,
   tokenId,
@@ -152,11 +151,11 @@ const EthereumDarkblockWidget = ({
             // Defining the chain aka Rinkeby testnet or Ethereum Main Net
             chainId: 1, //ethereum
             // Give a user friendly name to the specific contract you are signing for.
-            name: 'Verifying Ownership',
+            name: "Verifying Ownership",
             // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
             verifyingContract: address,
             // Just let's you know the latest version. Definitely make sure the field name is correct.
-            version: '1',
+            version: "1",
           },
 
           // Defining the message signing data content.
@@ -170,18 +169,18 @@ const EthereumDarkblockWidget = ({
             contents: data,
           },
           // Refers to the keys of the *types* object below.
-          primaryType: 'Mail',
+          primaryType: "Mail",
           types: {
             // TODO: Clarify if EIP712Domain refers to the domain the contract is hosted on
             EIP712Domain: [
-              { name: 'name', type: 'string' },
-              { name: 'version', type: 'string' },
-              { name: 'chainId', type: 'uint256' },
-              { name: 'verifyingContract', type: 'address' },
+              { name: "name", type: "string" },
+              { name: "version", type: "string" },
+              { name: "chainId", type: "uint256" },
+              { name: "verifyingContract", type: "address" },
             ],
 
             // Refer to PrimaryType
-            Mail: [{ name: 'contents', type: 'string' }],
+            Mail: [{ name: "contents", type: "string" }],
             // Not an EIP712Domain definition
           },
         })
@@ -193,7 +192,7 @@ const EthereumDarkblockWidget = ({
               params: [address, msgParams],
               from: address,
             },
-            async function(err, result) {
+            async function (err, result) {
               if (err) reject(null)
               if (result.error) {
                 reject(null)
