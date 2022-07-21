@@ -4,20 +4,20 @@ import { useMachine } from "@xstate/react"
 
 const platform = "Ethereum"
 const EthereumDarkblockWidget = ({
-  contractAddress,
-  tokenId,
-  w3 = null,
-  cb = null,
-  config = {
-    customCssClass: "",
-    debug: false,
-    imgViewer: {
-      showRotationControl: true,
-      autoHideControls: true,
-      controlsFadeDelay: true,
-    },
-  },
-}) => {
+                                   contractAddress,
+                                   tokenId,
+                                   w3 = null,
+                                   cb = null,
+                                   config = {
+                                     customCssClass: "",
+                                     debug: false,
+                                     imgViewer: {
+                                       showRotationControl: true,
+                                       autoHideControls: true,
+                                       controlsFadeDelay: true,
+                                     },
+                                   },
+                                 }) => {
   const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
   const [mediaURL, setMediaURL] = useState("")
@@ -38,6 +38,10 @@ const EthereumDarkblockWidget = ({
 
   useEffect(() => {
     callback(state.value)
+
+    if (!w3) {
+      send({ type: 'NO_WALLET' })
+    }
 
     if (state.value === "idle") {
       send({ type: "FETCH_ARWEAVE" })
@@ -192,7 +196,7 @@ const EthereumDarkblockWidget = ({
               params: [address, msgParams],
               from: address,
             },
-            async function (err, result) {
+            async function(err, result) {
               if (err) reject(null)
               if (result.error) {
                 reject(null)
