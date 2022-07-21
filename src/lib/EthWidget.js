@@ -4,20 +4,20 @@ import { useMachine } from "@xstate/react"
 
 const platform = "Ethereum"
 const EthereumDarkblockWidget = ({
-                                   contractAddress,
-                                   tokenId,
-                                   w3 = null,
-                                   cb = null,
-                                   config = {
-                                     customCssClass: "",
-                                     debug: false,
-                                     imgViewer: {
-                                       showRotationControl: true,
-                                       autoHideControls: true,
-                                       controlsFadeDelay: true,
-                                     },
-                                   },
-                                 }) => {
+  contractAddress,
+  tokenId,
+  w3 = null,
+  cb = null,
+  config = {
+    customCssClass: "",
+    debug: false,
+    imgViewer: {
+      showRotationControl: true,
+      autoHideControls: true,
+      controlsFadeDelay: true,
+    },
+  },
+}) => {
   const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
   const [mediaURL, setMediaURL] = useState("")
@@ -38,61 +38,45 @@ const EthereumDarkblockWidget = ({
 
   useEffect(() => {
     callback(state.value)
-
+    console.log("w3", w3, state.value)
     if (!w3) {
-      send({ type: 'NO_WALLET' })
-    }
-
-    if (state.value === "idle") {
-      send({ type: "FETCH_ARWEAVE" })
-    }
-
-    if (state.value === "started") {
-      const connectWallet = async () => {
-        const checkAddress = await w3.eth.getAccounts().then((data) => {
-          return data[0].toLowerCase()
-        })
-
-        if (checkAddress) {
-          setAddress(checkAddress)
-          send({ type: "CONNECT_WALLET" })
-        }
+      send({ type: "NO_WALLET" })
+    } else {
+      if (state.value === "idle") {
+        send({ type: "FETCH_ARWEAVE" })
       }
 
-      connectWallet()
-    }
+      if (state.value === "started") {
+        const connectWallet = async () => {
+          const checkAddress = await w3.eth.getAccounts().then((data) => {
+            return data[0].toLowerCase()
+          })
 
-    if (state.value === "wallet_connected") {
-      // send({ type: "SIGN" })
-    }
+          if (checkAddress) {
+            setAddress(checkAddress)
+            send({ type: "CONNECT_WALLET" })
+          }
+        }
 
-    if (state.value === "signing") {
-      authenticate(w3)
-    }
+        connectWallet()
+      }
 
-    if (state.value === "authenticated") {
-      send({ type: "DECRYPT" })
-    }
+      if (state.value === "wallet_connected") {
+        // send({ type: "SIGN" })
+      }
 
-    if (state.value === "decrypting") {
-      setMediaURL(
-        utils.getProxyAsset(
-          state.context.artId,
-          epochSignature,
-          state.context.tokenId,
-          state.context.contractAddress,
-          null,
-          platform,
-          address
-        )
-      )
+      if (state.value === "signing") {
+        authenticate(w3)
+      }
 
-      let arrTemp = []
+      if (state.value === "authenticated") {
+        send({ type: "DECRYPT" })
+      }
 
-      state.context.display.stack.map((db) => {
-        arrTemp.push(
+      if (state.value === "decrypting") {
+        setMediaURL(
           utils.getProxyAsset(
-            db.artId,
+            state.context.artId,
             epochSignature,
             state.context.tokenId,
             state.context.contractAddress,
@@ -101,16 +85,32 @@ const EthereumDarkblockWidget = ({
             address
           )
         )
-      })
 
-      setStackMediaURLs(arrTemp)
+        let arrTemp = []
 
-      setTimeout(() => {
-        send({ type: "SUCCESS" })
-      }, 1000)
-    }
+        state.context.display.stack.map((db) => {
+          arrTemp.push(
+            utils.getProxyAsset(
+              db.artId,
+              epochSignature,
+              state.context.tokenId,
+              state.context.contractAddress,
+              null,
+              platform,
+              address
+            )
+          )
+        })
 
-    if (state.value === "display") {
+        setStackMediaURLs(arrTemp)
+
+        setTimeout(() => {
+          send({ type: "SUCCESS" })
+        }, 1000)
+      }
+
+      if (state.value === "display") {
+      }
     }
   }, [state.value])
 
@@ -196,7 +196,7 @@ const EthereumDarkblockWidget = ({
               params: [address, msgParams],
               from: address,
             },
-            async function(err, result) {
+            async function (err, result) {
               if (err) reject(null)
               if (result.error) {
                 reject(null)
