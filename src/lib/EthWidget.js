@@ -38,7 +38,7 @@ const EthereumDarkblockWidget = ({
 
   useEffect(() => {
     callback(state.value)
-    console.log("w3", w3, state.value)
+
     if (!w3) {
       send({ type: "NO_WALLET" })
     } else {
