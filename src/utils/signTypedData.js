@@ -63,7 +63,9 @@ const signTypedData = async (data, w3) => {
             from: address,
           },
           async function (err, result) {
-            if (err) reject(err)
+            if (err) {
+              reject(err)
+            }
             if (result.error) {
               reject(result.error.message)
             }
