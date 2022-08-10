@@ -1238,10 +1238,10 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@darkblock.io/shared-components@0.1.16":
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/@darkblock.io/shared-components/-/shared-components-0.1.16.tgz#9da4e3caa75782169f285a705e74153399f680ed"
-  integrity sha512-hg1J/+xgRcP9zZqiH0KeGDtJF0GK2MBAMauuF7LPERwOKdb38Nx+npfdc53yUkFDLSb+coZeQEl68JBLCUJooA==
+"@darkblock.io/shared-components@0.2.0-beta.1":
+  version "0.2.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@darkblock.io/shared-components/-/shared-components-0.2.0-beta.1.tgz#a6eaebbf9b8204ed4a4295b4e208c52d4eac63c0"
+  integrity sha512-MggWg5J/elV8MgOF7w2VRN4+RKWWT8eMJxgQ6J37eDh2hUUHP3lfKgwKoABocXuRFTgVmTei8HAyBMoDxIoR6A==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"

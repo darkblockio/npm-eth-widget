@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useMachine } from "@xstate/react"
-import { utils, Upgrader, upgradeMachine } from "./shared"
+import { utils, Upgrader, upgradeMachine } from "@darkblock.io/shared-components"
 import signTypedData from "../utils/signTypedData"
 
 const platform = "Ethereum"
