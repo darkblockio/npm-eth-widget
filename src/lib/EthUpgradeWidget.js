@@ -5,21 +5,21 @@ import signTypedData from "../utils/signTypedData"
 
 const platform = "Ethereum"
 const EthUpgradeWidget = ({
-  apiKey = null,
-  contractAddress,
-  tokenId,
-  w3 = null,
-  cb = null,
-  config = {
-    customCssClass: "",
-    debug: false,
-    imgViewer: {
-      showRotationControl: true,
-      autoHideControls: true,
-      controlsFadeDelay: true,
-    },
-  },
-}) => {
+                            apiKey = null,
+                            contractAddress,
+                            tokenId,
+                            w3 = null,
+                            cb = null,
+                            config = {
+                              customCssClass: "",
+                              debug: false,
+                              imgViewer: {
+                                showRotationControl: true,
+                                autoHideControls: true,
+                                controlsFadeDelay: true,
+                              },
+                            },
+                          }) => {
   const [state, send] = useMachine(() => upgradeMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
 
@@ -48,11 +48,14 @@ const EthUpgradeWidget = ({
       }
 
       if (state.value === "started") {
+
+        console.log('--- started ---')
         const connectWallet = async () => {
           const checkAddress = await w3.eth.getAccounts().then((data) => {
             return data[0].toLowerCase()
           })
 
+          console.log('checkAddress', checkAddress)
           if (checkAddress) {
             setAddress(checkAddress)
             state.context.wallet_address = checkAddress
@@ -80,6 +83,7 @@ const EthUpgradeWidget = ({
   }, [state.value])
 
   const verifyOwnership = async () => {
+    console.log('=== verifyOwnership')
     let creatorDataWithOwner
 
     try {
@@ -90,11 +94,15 @@ const EthUpgradeWidget = ({
         creatorDataWithOwner.creator_address &&
         creatorDataWithOwner.creator_address.toLowerCase() === address.toLowerCase()
       ) {
+
+        console.log('verifyOwnership SUCCESS')
         send({ type: "SUCCESS" })
       } else {
+        console.log('verifyOwnership FAIL')
         send({ type: "FAIL" })
       }
     } catch {
+      console.log('verifyOwnership catch FAIL')
       send({ type: "FAIL" })
     }
   }
@@ -111,6 +119,16 @@ const EthUpgradeWidget = ({
         send({ type: "SIGNING_FAIL" })
       })
   }
+
+  useEffect(() => {
+    console.log('RETURNING UPGRADER')
+    console.log('apiKey', apiKey)
+    console.log('state', state)
+    console.log('config', config)
+    console.log('tokenId', tokenId)
+    console.log('contractAddress', contractAddress)
+  }, [])
+
 
   return <Upgrader apiKey={apiKey} state={state} config={config} authenticate={() => send({ type: "SIGN" })} />
 }
