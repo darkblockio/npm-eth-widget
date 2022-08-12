@@ -15,7 +15,7 @@ stories.add("Add Content", () => {
     const [address, setAddress] = useState(null)
     const [loaded, setLoaded] = useState(false)
 
-    const apiKey = "0ta7b7hp0sm59vq79d0j63che64c" //internal DB key - not for public use
+    const apiKey = "dgtqh26mv8mtgemq4tys47d4a2ax" //internal DB key - not for public use
 
     useEffect(() => {
       if (window.ethereum) {
