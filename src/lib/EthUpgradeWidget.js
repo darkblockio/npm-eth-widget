@@ -101,7 +101,7 @@ const EthUpgradeWidget = ({
 
   const signFileUploadData = async () => {
     let signatureData = `${state.context.platform}${state.context.nftData.nft.contract}:${state.context.nftData.nft.token}${state.context.fileHash}`
-    
+
     await signTypedData(signatureData, w3)
       .then((response) => {
         state.context.signature = response
@@ -113,7 +113,15 @@ const EthUpgradeWidget = ({
       })
   }
 
-  return <Upgrader apiKey={apiKey} state={state} config={config} authenticate={() => send({ type: "SIGN" })} />
+  return (
+    <Upgrader
+      apiKey={apiKey}
+      state={state}
+      config={config}
+      authenticate={() => send({ type: "SIGN" })}
+      reset={() => send({ type: "RESET" })}
+    />
+  )
 }
 
 export default EthUpgradeWidget
