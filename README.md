@@ -67,6 +67,7 @@ const Widget = () => {
       w3={web3}
       cb={(p) => console.log(p)}
       config={config}
+      network={'mainnet' || 'rinkeby'}
     />
   )
 }
@@ -78,28 +79,20 @@ export default Widget
 ### Example
 
 ```
-import { SolUpgradeWidget } from "@darkblock.io/eth-widget"
+import { EthUpgradeWidget } from "@darkblock.io/eth-widget"
 
 const Widget = () => {
-  ...
-
-const apiKey = '** contact darkblock for apikey **'
-
+  const apiKey = '** contact darkblock for apikey **'
 
   return (
-  <SolUpgradeWidget 
-    apiKey={apiKey} 
-    tokenId={id} 
-    walletAdapter={wallAdapter} 
-    cb={(p) => console.log(p)}
-    config={config} 
-    />
-    <EthereumDarkblockWidget
+    <EthUpgradeWidget
+      apiKey={apiKey} 
       contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e"
       tokenId="30553606573219150352991292921105176340809048341686170040023897672591735783425"
       w3={web3}
       cb={(p) => console.log(p)}
       config={config}
+      network={'mainnet' || 'rinkeby'}
     />
   )
 }
