@@ -37,16 +37,17 @@ stories.add("Add Content", () => {
         setLoaded(true)
       }
     }, [])
-    
+
     return (
       <div style={{ maxWidth: "700px" }}>
         {loaded && (
           <EthUpgradeWidget
             apiKey={apiKey}
-            contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e"
-            tokenId="30553606573219150352991292921105176340809048341686170040023897679188805550081"
+            contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e" //default db
+            tokenId="30553606573219150352991292921105176340809048341686170040023897679188805550081" //default db
             w3={web3}
             cb={cb}
+            network="mainnet"
             config={{
               customCssClass: "custom-class",
               debug: false,

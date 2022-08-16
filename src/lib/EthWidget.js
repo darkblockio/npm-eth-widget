@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react"
 import { Stack, utils, widgetMachine } from "@darkblock.io/shared-components"
 import { useMachine } from "@xstate/react"
 
-const platform = "Ethereum"
 const EthereumDarkblockWidget = ({
   contractAddress,
   tokenId,
   w3 = null,
   cb = null,
+  network = "mainnet",
   config = {
     customCssClass: "",
     debug: false,
@@ -18,6 +18,8 @@ const EthereumDarkblockWidget = ({
     },
   },
 }) => {
+  const platform = network !== "rinkeby" ? "Ethereum" : "Ethereum-devnet"
+
   const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
   const [mediaURL, setMediaURL] = useState("")
@@ -130,7 +132,7 @@ const EthereumDarkblockWidget = ({
       ) {
         send({ type: "FAIL" })
       } else {
-        signature = await signData(address, sessionToken, w3).then((response) => {
+        signature = await signData(address, sessionToken, w3, platform).then((response) => {
           return response
         })
 
@@ -147,13 +149,15 @@ const EthereumDarkblockWidget = ({
     setEpochSignature(epoch + "_" + signature)
   }
 
-  const signData = async (address, data, w3) => {
+  const signData = async (address, data, w3, platform) => {
+    let chainId = platform === "Ethereum-devnet" ? 4 : 1
+
     return new Promise((resolve, reject) => {
       try {
         const msgParams = JSON.stringify({
           domain: {
             // Defining the chain aka Rinkeby testnet or Ethereum Main Net
-            chainId: 1, //ethereum
+            chainId: chainId,
             // Give a user friendly name to the specific contract you are signing for.
             name: "Verifying Ownership",
             // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
