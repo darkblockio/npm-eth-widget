@@ -3,13 +3,13 @@ import { useMachine } from "@xstate/react"
 import { utils, Upgrader, upgradeMachine } from "@darkblock.io/shared-components"
 import signTypedData from "../utils/signTypedData"
 
-const platform = "Ethereum"
 const EthUpgradeWidget = ({
   apiKey = null,
   contractAddress,
   tokenId,
   w3 = null,
   cb = null,
+  network = "mainnet",
   config = {
     customCssClass: "",
     debug: false,
@@ -20,6 +20,8 @@ const EthUpgradeWidget = ({
     },
   },
 }) => {
+  const platform = network !== "rinkeby" ? "Ethereum" : "Ethereum-devnet"
+
   const [state, send] = useMachine(() => upgradeMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
 
@@ -83,17 +85,18 @@ const EthUpgradeWidget = ({
     let creatorDataWithOwner
 
     try {
-      creatorDataWithOwner = await utils.getCreator(contractAddress, tokenId, platform)
-
-      if (
-        creatorDataWithOwner &&
-        creatorDataWithOwner.creator_address &&
-        creatorDataWithOwner.creator_address.toLowerCase() === address.toLowerCase()
-      ) {
-        send({ type: "SUCCESS" })
-      } else {
-        send({ type: "FAIL" })
-      }
+      setTimeout(async () => {
+        creatorDataWithOwner = await utils.getCreator(contractAddress, tokenId, platform)
+        if (
+          creatorDataWithOwner &&
+          creatorDataWithOwner.creator_address &&
+          creatorDataWithOwner.creator_address.toLowerCase() === address.toLowerCase()
+        ) {
+          send({ type: "SUCCESS" })
+        } else {
+          send({ type: "FAIL" })
+        }
+      }, 1000)
     } catch {
       send({ type: "FAIL" })
     }
@@ -102,7 +105,7 @@ const EthUpgradeWidget = ({
   const signFileUploadData = async () => {
     let signatureData = `${state.context.platform}${state.context.nftData.nft.contract}:${state.context.nftData.nft.token}${state.context.fileHash}`
 
-    await signTypedData(signatureData, w3)
+    await signTypedData(signatureData, w3, state.context.platform)
       .then((response) => {
         state.context.signature = response
         send({ type: "SIGNING_SUCCESS" })
