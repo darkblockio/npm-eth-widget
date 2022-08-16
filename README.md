@@ -55,12 +55,45 @@ const cb = (param) => {
 ### Example
 
 ```
-import EthereumDarkblockWidget from "@darkblock.io/eth-widget"
+import { EthereumDarkblockWidget } from "@darkblock.io/eth-widget"
 
 const Widget = () => {
   ...
 
   return (
+    <EthereumDarkblockWidget
+      contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e"
+      tokenId="30553606573219150352991292921105176340809048341686170040023897672591735783425"
+      w3={web3}
+      cb={(p) => console.log(p)}
+      config={config}
+    />
+  )
+}
+
+export default Widget
+
+```
+
+### Example
+
+```
+import { SolUpgradeWidget } from "@darkblock.io/eth-widget"
+
+const Widget = () => {
+  ...
+
+const apiKey = '** contact darkblock for apikey **'
+
+
+  return (
+  <SolUpgradeWidget 
+    apiKey={apiKey} 
+    tokenId={id} 
+    walletAdapter={wallAdapter} 
+    cb={(p) => console.log(p)}
+    config={config} 
+    />
     <EthereumDarkblockWidget
       contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e"
       tokenId="30553606573219150352991292921105176340809048341686170040023897672591735783425"
