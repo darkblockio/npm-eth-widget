@@ -27,6 +27,7 @@ import EthereumDarkblockWidget "@darkblock.io/eth-widget"
 - **w3:\*** web3 object
 - **cb:** callback function to be triggered on the widget's state change (optional)
 - **config:** config object (optional)
+- **network:** mainnet or rinkeby (optional - default is mainnet)
 
 **cb** function example, the callback function will have the widget's state passed as a parameter:
 
@@ -53,7 +54,7 @@ const cb = (param) => {
 ### Example
 
 ```
-import EthereumDarkblockWidget from "@darkblock.io/eth-widget"
+import { EthereumDarkblockWidget } from "@darkblock.io/eth-widget"
 
 const Widget = () => {
   ...
@@ -65,6 +66,32 @@ const Widget = () => {
       w3={web3}
       cb={(p) => console.log(p)}
       config={config}
+      network={'mainnet' || 'rinkeby'}
+    />
+  )
+}
+
+export default Widget
+
+```
+
+### Example
+
+```
+import { EthUpgradeWidget } from "@darkblock.io/eth-widget"
+
+const Widget = () => {
+  const apiKey = '** contact darkblock for apikey **'
+
+  return (
+    <EthUpgradeWidget
+      apiKey={apiKey} 
+      contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e"
+      tokenId="30553606573219150352991292921105176340809048341686170040023897672591735783425"
+      w3={web3}
+      cb={(p) => console.log(p)}
+      config={config}
+      network={'mainnet' || 'rinkeby'}
     />
   )
 }
