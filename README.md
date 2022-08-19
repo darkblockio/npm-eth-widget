@@ -29,6 +29,7 @@ require("@darkblock.io/eth-widget")
 - **w3:\*** web3 object
 - **cb:** callback function to be triggered on the widget's state change (optional)
 - **config:** config object (optional)
+- **network:** mainnet or rinkeby (optional - default is mainnet)
 
 **cb** function example, the callback function will have the widget's state passed as a parameter:
 
