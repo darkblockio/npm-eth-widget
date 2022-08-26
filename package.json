@@ -19,7 +19,7 @@
     "os": false
   },
   "dependencies": {
-    "@darkblock.io/shared-components": "0.2.7",
+    "@darkblock.io/shared-components": "0.2.8",
     "@xstate/react": "^2.0.0",
     "openseadragon": "^3.0.0",
     "photoswipe": "^4.1.3",
