@@ -10,8 +10,10 @@ const signInAndGetAccount = async (w3) => {
   }
 }
 
-const signTypedData = async (data, w3, platform) => {
-  let chainId = platform === "Ethereum-devnet" ? 4 : 1
+const signTypedData = async (data, w3, platform, network = null) => {
+  let chainId = 1 //ethereum default
+  if (network.toLowerCase() === "rinkeby") chainId = 4
+  if (network.toLowerCase() === "goerli") chainId = 5
 
   const address = await signInAndGetAccount(w3)
   const msgParams = JSON.stringify({
@@ -62,7 +64,7 @@ const signTypedData = async (data, w3, platform) => {
             params: [address, msgParams],
             from: address,
           },
-          async function(err, result) {
+          async function (err, result) {
             if (err) {
               reject(err)
             }
