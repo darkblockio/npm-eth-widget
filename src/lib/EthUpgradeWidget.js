@@ -20,7 +20,8 @@ const EthUpgradeWidget = ({
     },
   },
 }) => {
-  const platform = network !== "rinkeby" ? "Ethereum" : "Ethereum-devnet"
+  const upperNetwork = network.charAt(0).toUpperCase() + network.slice(1)
+  const platform = network.toLowerCase() === "mainnet" ? "Ethereum" : `Ethereum-${upperNetwork}`
 
   const [state, send] = useMachine(() => upgradeMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
@@ -105,7 +106,7 @@ const EthUpgradeWidget = ({
   const signFileUploadData = async () => {
     let signatureData = `${state.context.platform}${state.context.nftData.nft.contract}:${state.context.nftData.nft.token}${state.context.fileHash}`
 
-    await signTypedData(signatureData, w3, state.context.platform)
+    await signTypedData(signatureData, w3, state.context.platform, network)
       .then((response) => {
         state.context.signature = response
         send({ type: "SIGNING_SUCCESS" })

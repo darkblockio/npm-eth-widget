@@ -18,7 +18,8 @@ const EthereumDarkblockWidget = ({
     },
   },
 }) => {
-  const platform = network !== "rinkeby" ? "Ethereum" : "Ethereum-devnet"
+  const upperNetwork = network.charAt(0).toUpperCase() + network.slice(1)
+  const platform = network.toLowerCase() === "mainnet" ? "Ethereum" : `Ethereum-${upperNetwork}`
 
   const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform))
   const [address, setAddress] = useState(null)
@@ -132,7 +133,7 @@ const EthereumDarkblockWidget = ({
       ) {
         send({ type: "FAIL" })
       } else {
-        signature = await signData(address, sessionToken, w3, platform).then((response) => {
+        signature = await signData(address, sessionToken, w3, platform, network).then((response) => {
           return response
         })
 
@@ -149,8 +150,10 @@ const EthereumDarkblockWidget = ({
     setEpochSignature(epoch + "_" + signature)
   }
 
-  const signData = async (address, data, w3, platform) => {
-    let chainId = platform === "Ethereum-devnet" ? 4 : 1
+  const signData = async (address, data, w3, platform, network = null) => {
+    let chainId = 1 //ethereum default
+    if (network.toLowerCase() === "rinkeby") chainId = 4
+    if (network.toLowerCase() === "goerli") chainId = 5
 
     return new Promise((resolve, reject) => {
       try {
