@@ -66,7 +66,7 @@ const Widget = () => {
       w3={web3}
       cb={(p) => console.log(p)}
       config={config}
-      network={'mainnet' || 'Rinkeby' || 'Goerli}
+      network={'mainnet' || 'Rinkeby' || 'Goerli'}
     />
   )
 }
@@ -91,7 +91,7 @@ const Widget = () => {
       w3={web3}
       cb={(p) => console.log(p)}
       config={config}
-      network={'mainnet' || 'rinkeby'}
+      network={'mainnet' || 'rinkeby' || 'goerli'}
     />
   )
 }
