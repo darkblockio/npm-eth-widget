@@ -15,8 +15,8 @@ stories.add("Add Content", () => {
     const [address, setAddress] = useState(null)
     const [loaded, setLoaded] = useState(false)
 
-    const apiKey = "dgtqh26mv8mtgemq4tys47d4a2ax" //internal DB key - not for public use
-
+    const apiKey = "" //Darkblock API key goes here
+    
     useEffect(() => {
       if (window.ethereum) {
         window.ethereum
