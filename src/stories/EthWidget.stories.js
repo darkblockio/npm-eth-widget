@@ -54,6 +54,7 @@ stories.add("Video - Bubble Light", () => {
                 controlsFadeDelay: true,
               },
             }}
+            dev={false}
           />
         )}
       </div>

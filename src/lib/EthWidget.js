@@ -17,11 +17,12 @@ const EthereumDarkblockWidget = ({
       controlsFadeDelay: true,
     },
   },
+  dev = false,
 }) => {
   const upperNetwork = network.charAt(0).toUpperCase() + network.slice(1)
   const platform = network.toLowerCase() === "mainnet" ? "Ethereum" : `Ethereum-${upperNetwork}`
 
-  const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform))
+  const [state, send] = useMachine(() => widgetMachine(tokenId, contractAddress, platform, dev))
   const [address, setAddress] = useState(null)
   const [mediaURL, setMediaURL] = useState("")
   const [stackMediaURLs, setStackMediaURLs] = useState("")
@@ -124,7 +125,8 @@ const EthereumDarkblockWidget = ({
     let ownerDataWithOwner
 
     try {
-      ownerDataWithOwner = await utils.getOwner(contractAddress, tokenId, platform, address)
+      console.log("HERE:", dev)
+      ownerDataWithOwner = await utils.getOwner(contractAddress, tokenId, platform, address, dev)
 
       if (
         (!ownerDataWithOwner ||

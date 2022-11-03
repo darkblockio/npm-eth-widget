@@ -16,7 +16,7 @@ stories.add("Add Content", () => {
     const [loaded, setLoaded] = useState(false)
 
     const apiKey = "" //Darkblock API key goes here
-    
+
     useEffect(() => {
       if (window.ethereum) {
         window.ethereum
@@ -57,6 +57,7 @@ stories.add("Add Content", () => {
                 controlsFadeDelay: true,
               },
             }}
+            dev={false}
           />
         )}
       </div>
