@@ -125,7 +125,6 @@ const EthereumDarkblockWidget = ({
     let ownerDataWithOwner
 
     try {
-      console.log("HERE:", dev)
       ownerDataWithOwner = await utils.getOwner(contractAddress, tokenId, platform, address, dev)
 
       if (
