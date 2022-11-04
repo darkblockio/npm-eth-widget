@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Stack, utils, widgetMachine } from "@darkblock.io/shared-components"
 import { useMachine } from "@xstate/react"
+import signTypedData, { SIGNING_TYPE } from "../utils/signTypedData"
 
 const EthereumDarkblockWidget = ({
   contractAddress,
@@ -137,7 +138,7 @@ const EthereumDarkblockWidget = ({
       ) {
         send({ type: "FAIL" })
       } else {
-        signature = await signData(address, sessionToken, w3, platform, network).then((response) => {
+        signature = await signTypedData(sessionToken, w3, SIGNING_TYPE.accessAuth).then((response) => {
           return response
         })
 
@@ -152,74 +153,6 @@ const EthereumDarkblockWidget = ({
     }
 
     setEpochSignature(epoch + "_" + signature)
-  }
-
-  const signData = async (address, data, w3, platform, network = null) => {
-    let chainId = 1 //ethereum default
-    if (network.toLowerCase() === "rinkeby") chainId = 4
-    if (network.toLowerCase() === "goerli") chainId = 5
-
-    return new Promise((resolve, reject) => {
-      try {
-        const msgParams = JSON.stringify({
-          domain: {
-            // Defining the chain aka Rinkeby testnet or Ethereum Main Net
-            chainId: chainId,
-            // Give a user friendly name to the specific contract you are signing for.
-            name: "Verifying Ownership",
-            // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
-            verifyingContract: address,
-            // Just let's you know the latest version. Definitely make sure the field name is correct.
-            version: "1",
-          },
-
-          // Defining the message signing data content.
-          message: {
-            /*
-               - Anything you want. Just a JSON Blob that encodes the data you want to send
-               - No required fields
-               - This is DApp Specific
-               - Be as explicit as possible when building out the message schema.
-              */
-            contents: data,
-          },
-          // Refers to the keys of the *types* object below.
-          primaryType: "Mail",
-          types: {
-            // TODO: Clarify if EIP712Domain refers to the domain the contract is hosted on
-            EIP712Domain: [
-              { name: "name", type: "string" },
-              { name: "version", type: "string" },
-              { name: "chainId", type: "uint256" },
-              { name: "verifyingContract", type: "address" },
-            ],
-
-            // Refer to PrimaryType
-            Mail: [{ name: "contents", type: "string" }],
-            // Not an EIP712Domain definition
-          },
-        })
-
-        setTimeout(() => {
-          w3.currentProvider.sendAsync(
-            {
-              method: "eth_signTypedData_v4",
-              params: [address, msgParams],
-              from: address,
-            },
-            async function (err, result) {
-              if (err) reject(null)
-              if (result.error) {
-                reject(null)
-              }
-              resolve(result.result)
-            }
-          )
-        }, 1)
-      } catch (err) {
-        resolve(err)
-      }
-    })
   }
 
   return <Stack state={state} authenticate={() => send({ type: "SIGN" })} urls={stackMediaURLs} config={config} />
