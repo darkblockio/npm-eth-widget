@@ -131,6 +131,7 @@ const EthUpgradeWidget = ({
           send({ type: "RESET" })
         }
       }}
+      dev={dev}
     />
   )
 }
