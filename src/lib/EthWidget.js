@@ -127,14 +127,11 @@ const EthereumDarkblockWidget = ({
 
     try {
       ownerDataWithOwner = await utils.getOwner(contractAddress, tokenId, platform, address, dev)
-
+      
       if (
-        (!ownerDataWithOwner ||
-          !ownerDataWithOwner.owner_address ||
-          ownerDataWithOwner.owner_address.toLowerCase() !== address.toLowerCase()) &&
-        (!ownerDataWithOwner ||
-          !ownerDataWithOwner.creator_address ||
-          ownerDataWithOwner.creator_address.toLowerCase() !== address.toLowerCase())
+        !ownerDataWithOwner ||
+        !ownerDataWithOwner.owner_address ||
+        ownerDataWithOwner.owner_address.toLowerCase() !== address.toLowerCase()
       ) {
         send({ type: "FAIL" })
       } else {
