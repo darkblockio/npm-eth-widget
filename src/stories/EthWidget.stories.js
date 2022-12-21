@@ -7,13 +7,37 @@ const stories = storiesOf("Ethereum Darkblock Widget", module)
 
 stories.add("Video - Bubble Light", () => {
   const cb = (param1) => {
-    console.log(param1)
+    // console.log(param1)
   }
 
   const Widget = () => {
     const [web3, setWeb3] = useState(null)
     const [address, setAddress] = useState(null)
     const [loaded, setLoaded] = useState(false)
+
+    const dbConfigOptions = {
+      include: [],
+      exclude: [],
+      sort: [],
+      // include: [
+      //   "ZAqn4VSpEsowZ0U3XpQaRTz13QJMDPitJukQSwr-6lk",
+      //   "kFJVyEyt1Tv0KalGp_B4h3rZOsUhahusZnk64x8OaEY",
+      //   "-X3yktmoP8Odx1buuxUcWgVbCQAkcWgekQCSRnB-nzE",
+      //   "1CLSraZWAmBLKjWpUKrhv8kT9xwXFbK8JHBkfHWgoGw",
+      // ],
+      // exclude: [
+      //   // "kFJVyEyt1Tv0KalGp_B4h3rZOsUhahusZnk64x8OaEY",
+      //   "zAboS3Dxe3fPaDRKvygRCEBpKsuf4Qa8Df5b5FhLJew"
+      // ],
+      // sort: [
+      //   "1CLSraZWAmBLKjWpUKrhv8kT9xwXFbK8JHBkfHWgoGw",
+      //   "ZAqn4VSpEsowZ0U3XpQaRTz13QJMDPitJukQSwr-6lk",
+      //   "kFJVyEyt1Tv0KalGp_B4h3rZOsUhahusZnk64x8OaEY",
+      //   "-X3yktmoP8Odx1buuxUcWgVbCQAkcWgekQCSRnB-nzE",
+      //   "-OB6bsOTbqjnnz8g-Jq1b108Sh3Sg3JkJf-65EhJOao",
+      //   "zAboS3Dxe3fPaDRKvygRCEBpKsuf4Qa8Df5b5FhLJew",
+      // ],
+    }
 
     useEffect(() => {
       if (window.ethereum) {
@@ -47,7 +71,7 @@ stories.add("Video - Bubble Light", () => {
             network="mainnet"
             config={{
               customCssClass: "custom-class",
-              debug: true,
+              debug: false,
               imgViewer: {
                 showRotationControl: true,
                 autoHideControls: true,
@@ -55,6 +79,7 @@ stories.add("Video - Bubble Light", () => {
               },
             }}
             dev={false}
+            dbConfig={dbConfigOptions}
           />
         )}
       </div>
