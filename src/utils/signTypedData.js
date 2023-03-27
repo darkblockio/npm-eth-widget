@@ -38,7 +38,7 @@ const signTypedData = async (data, w3, type) => {
   return new Promise((resolve, reject) => {
     try {
       setTimeout(() => {
-        w3.currentProvider.sendAsync(
+        w3.currentProvider.request(
           {
             method: "personal_sign",
             params: [address, msgParams],
