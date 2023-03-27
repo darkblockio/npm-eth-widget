@@ -40,7 +40,7 @@ const signTypedData = async (data, w3, type) => {
       setTimeout(() => {
         w3.currentProvider.request(
           {
-            method: "personal_sign",
+            method: "eth_requestAccounts",
             params: [address, msgParams],
             from: address,
           },
