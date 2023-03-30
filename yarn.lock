@@ -1238,7 +1238,7 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@darkblock.io/shared-components@0.2.49":
+"@darkblock.io/shared-components@^0.2.49":
   version "0.2.49"
   resolved "https://registry.yarnpkg.com/@darkblock.io/shared-components/-/shared-components-0.2.49.tgz#95bd3e324223f7c93eb3f3e9869fd5d60a11962e"
   integrity sha512-RLG/oq/ak4vhdBWEqFW71M/E0hBC2/rETvdkiwXnlBX/uRbvzBRbvp620SFjtsTFyy4iMnl5YjNszijJJ71C7A==
